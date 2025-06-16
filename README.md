@@ -77,7 +77,7 @@ The Development Environment Orchestrator solves the common problem of complex de
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/JadenRazo/dev-orchestrator
 cd dev-environment-orchestrator
 
 # 2. Start supporting services
@@ -320,11 +320,3 @@ container_instances (id, environment_id, docker_container_id, status, host_port)
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-## Support
-
-- 📚 **Documentation**: [API Docs](http://localhost:8080/swagger-ui.html)
-- 🐛 **Issues**: [GitHub Issues](../../issues)
-- 💬 **Discussions**: [GitHub Discussions](../../discussions)
-
-**Built with ❤️ using Spring Boot and Docker**
