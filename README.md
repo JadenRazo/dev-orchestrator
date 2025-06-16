@@ -307,14 +307,6 @@ container_instances (id, environment_id, docker_container_id, status, host_port)
 6. **Push** to the branch (`git push origin feature/amazing-feature`)
 7. **Open** a Pull Request
 
-### Development Guidelines
-
-- Maintain **80%+ test coverage**
-- Follow **Spring Boot best practices**
-- Use **async patterns** for long-running operations
-- Add **comprehensive error handling**
-- Update **API documentation**
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
