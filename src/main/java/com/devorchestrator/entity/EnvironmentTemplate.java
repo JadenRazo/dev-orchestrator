@@ -52,6 +52,19 @@ public class EnvironmentTemplate {
     @Column(name = "is_public", nullable = false)
     private Boolean isPublic = true;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "infrastructure_type", nullable = false)
+    private InfrastructureProvider infrastructureType = InfrastructureProvider.DOCKER;
+
+    @Column(name = "terraform_template", columnDefinition = "TEXT")
+    private String terraformTemplate;
+
+    @Column(name = "terraform_variables", columnDefinition = "TEXT")
+    private String terraformVariables;
+
+    @Column(name = "cloud_region", length = 50)
+    private String cloudRegion;
+
     @Column(name = "created_by")
     private Long createdBy;
 
@@ -67,6 +80,7 @@ public class EnvironmentTemplate {
         this.memoryLimitMb = 512;
         this.cpuLimit = 1.0;
         this.isPublic = true;
+        this.infrastructureType = InfrastructureProvider.DOCKER;
     }
 
     public EnvironmentTemplate(String id, String name, String description, String dockerComposeContent, Long createdBy) {
@@ -79,6 +93,7 @@ public class EnvironmentTemplate {
         this.memoryLimitMb = 512;
         this.cpuLimit = 1.0;
         this.isPublic = true;
+        this.infrastructureType = InfrastructureProvider.DOCKER;
     }
 
     public void setId(String id) {
@@ -119,6 +134,30 @@ public class EnvironmentTemplate {
 
     public void setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public void setInfrastructureType(InfrastructureProvider infrastructureType) {
+        this.infrastructureType = infrastructureType;
+    }
+
+    public void setTerraformTemplate(String terraformTemplate) {
+        this.terraformTemplate = terraformTemplate;
+    }
+
+    public void setTerraformVariables(String terraformVariables) {
+        this.terraformVariables = terraformVariables;
+    }
+
+    public void setCloudRegion(String cloudRegion) {
+        this.cloudRegion = cloudRegion;
+    }
+
+    public boolean isCloudBased() {
+        return infrastructureType != InfrastructureProvider.DOCKER;
+    }
+
+    public boolean requiresTerraform() {
+        return infrastructureType != InfrastructureProvider.DOCKER;
     }
 
     public boolean isCreatedByUser(Long userId) {

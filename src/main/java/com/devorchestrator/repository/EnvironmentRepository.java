@@ -76,4 +76,8 @@ public interface EnvironmentRepository extends JpaRepository<Environment, String
 
     @Query("SELECT COUNT(e) FROM Environment e WHERE e.createdAt >= CURRENT_DATE")
     long countEnvironmentsCreatedToday();
+    
+    Optional<Environment> findByProjectIdAndStatus(String projectId, EnvironmentStatus status);
+    
+    List<Environment> findByProjectIdAndStatusIn(String projectId, List<EnvironmentStatus> statuses);
 }

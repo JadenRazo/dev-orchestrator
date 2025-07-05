@@ -47,6 +47,9 @@ public class Environment {
 
     @Column(name = "docker_compose_override", columnDefinition = "TEXT")
     private String dockerComposeOverride;
+    
+    @Column(name = "project_id", length = 36)
+    private String projectId;
 
     @ElementCollection
     @CollectionTable(name = "environment_port_mappings", joinColumns = @JoinColumn(name = "environment_id"))
@@ -59,6 +62,19 @@ public class Environment {
 
     @Column(name = "auto_stop_after_hours", nullable = false)
     private Integer autoStopAfterHours = 8;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "infrastructure_provider", nullable = false)
+    private InfrastructureProvider infrastructureProvider = InfrastructureProvider.DOCKER;
+
+    @Column(name = "terraform_state_id", length = 100)
+    private String terraformStateId;
+
+    @ElementCollection
+    @CollectionTable(name = "environment_cloud_resources", joinColumns = @JoinColumn(name = "environment_id"))
+    @MapKeyColumn(name = "resource_type")
+    @Column(name = "resource_id")
+    private Map<String, String> cloudResourceIds = new HashMap<>();
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -84,6 +100,8 @@ public class Environment {
         this.autoStopAfterHours = 8;
         this.containers = new ArrayList<>();
         this.lastAccessedAt = LocalDateTime.now();
+        this.infrastructureProvider = InfrastructureProvider.DOCKER;
+        this.cloudResourceIds = new HashMap<>();
     }
 
     public void setName(String name) {
@@ -120,6 +138,30 @@ public class Environment {
 
     public void setContainers(List<ContainerInstance> containers) {
         this.containers = containers;
+    }
+
+    public void setInfrastructureProvider(InfrastructureProvider infrastructureProvider) {
+        this.infrastructureProvider = infrastructureProvider;
+    }
+
+    public void setTerraformStateId(String terraformStateId) {
+        this.terraformStateId = terraformStateId;
+    }
+
+    public void setCloudResourceIds(Map<String, String> cloudResourceIds) {
+        this.cloudResourceIds = cloudResourceIds;
+    }
+
+    public void addCloudResource(String resourceType, String resourceId) {
+        this.cloudResourceIds.put(resourceType, resourceId);
+    }
+
+    public void removeCloudResource(String resourceType) {
+        this.cloudResourceIds.remove(resourceType);
+    }
+    
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public void addPortMapping(Integer containerPort, Integer hostPort) {

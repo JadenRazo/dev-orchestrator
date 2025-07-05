@@ -1,9 +1,7 @@
 package com.devorchestrator.service;
 
-import com.devorchestrator.entity.Environment;
-import com.devorchestrator.entity.EnvironmentStatus;
-import com.devorchestrator.entity.EnvironmentTemplate;
-import com.devorchestrator.entity.User;
+import com.devorchestrator.dto.InfrastructureProvisioningRequest;
+import com.devorchestrator.entity.*;
 import com.devorchestrator.exception.EnvironmentLimitExceededException;
 import com.devorchestrator.exception.EnvironmentNotFoundException;
 import com.devorchestrator.exception.InsufficientResourcesException;
@@ -21,8 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -36,6 +36,7 @@ public class EnvironmentService {
     private final ContainerOrchestrationService containerService;
     private final ResourceMonitoringService resourceService;
     private final WebSocketNotificationService notificationService;
+    private final ObjectMapper objectMapper;
 
     @Value("${app.environment.max-environments-per-user}")
     private int maxEnvironmentsPerUser;
@@ -45,13 +46,15 @@ public class EnvironmentService {
                             UserRepository userRepository,
                             ContainerOrchestrationService containerService,
                             ResourceMonitoringService resourceService,
-                            WebSocketNotificationService notificationService) {
+                            WebSocketNotificationService notificationService,
+                            ObjectMapper objectMapper) {
         this.environmentRepository = environmentRepository;
         this.templateRepository = templateRepository;
         this.userRepository = userRepository;
         this.containerService = containerService;
         this.resourceService = resourceService;
         this.notificationService = notificationService;
+        this.objectMapper = objectMapper;
     }
 
     public Environment createEnvironment(String templateId, Long userId, String name) {
@@ -83,6 +86,56 @@ public class EnvironmentService {
             });
         
         log.info("Started async creation of environment {} for user {}", saved.getId(), userId);
+
+        return saved;
+    }
+
+    public Environment createInfrastructureEnvironment(InfrastructureProvisioningRequest request, Long userId) {
+        User user = validateUser(userId);
+        EnvironmentTemplate template = validateTemplate(request.getTemplateId());
+        validateUserEnvironmentLimit(userId);
+        
+        // Validate template supports requested infrastructure type
+        if (template.getInfrastructureType() != request.getInfrastructureProvider() &&
+            template.getInfrastructureType() != InfrastructureProvider.HYBRID) {
+            throw new InvalidEnvironmentStateException(
+                "Template " + template.getId() + " does not support " + request.getInfrastructureProvider() + " infrastructure"
+            );
+        }
+        
+        // For cloud environments, validate Terraform template exists
+        if (request.getInfrastructureProvider() != InfrastructureProvider.DOCKER && 
+            (template.getTerraformTemplate() == null || template.getTerraformTemplate().isEmpty())) {
+            throw new InvalidEnvironmentStateException(
+                "Template " + template.getId() + " does not have Terraform configuration for cloud deployment"
+            );
+        }
+
+        Environment environment = Environment.builder()
+            .id(UUID.randomUUID().toString())
+            .name(request.getEnvironmentName())
+            .template(template)
+            .owner(user)
+            .status(EnvironmentStatus.CREATING)
+            .infrastructureProvider(request.getInfrastructureProvider())
+            .dockerComposeOverride(request.getDockerComposeOverride())
+            .autoStopAfterHours(request.getAutoStopAfterHours())
+            .build();
+
+        // Set cloud-specific properties
+        if (request.getTerraformVariables() != null) {
+            String variablesJson = convertMapToJson(request.getTerraformVariables());
+            environment.getTemplate().setTerraformVariables(variablesJson);
+        }
+        
+        if (request.getCloudRegion() != null) {
+            environment.getTemplate().setCloudRegion(request.getCloudRegion());
+        }
+
+        Environment saved = environmentRepository.save(environment);
+        
+        log.info("Created infrastructure environment {} with provider {} for user {}", 
+            saved.getId(), request.getInfrastructureProvider(), userId);
 
         return saved;
     }
@@ -247,6 +300,15 @@ public class EnvironmentService {
         Environment updatedEnvironment = environmentRepository.findById(environmentId).orElse(null);
         if (updatedEnvironment != null) {
             notificationService.notifyEnvironmentStatusChange(updatedEnvironment);
+        }
+    }
+
+    private String convertMapToJson(Map<String, Object> map) {
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (Exception e) {
+            log.error("Failed to convert map to JSON", e);
+            return "{}";
         }
     }
 }

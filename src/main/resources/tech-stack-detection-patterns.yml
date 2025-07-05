@@ -1,0 +1,1451 @@
+# Tech Stack Detection Patterns for Development Environment Orchestrator
+# This file defines patterns for detecting various technologies in development projects
+
+programming_languages:
+  # Mainstream Languages
+  java:
+    name: "Java"
+    file_patterns:
+      - "*.java"
+      - "pom.xml"
+      - "build.gradle"
+      - "build.gradle.kts"
+      - ".mvn/**"
+    config_files:
+      - "pom.xml"
+      - "build.gradle"
+      - "gradle.properties"
+      - "settings.gradle"
+    markers:
+      - "src/main/java"
+      - "src/test/java"
+  
+  python:
+    name: "Python"
+    file_patterns:
+      - "*.py"
+      - "requirements.txt"
+      - "Pipfile"
+      - "pyproject.toml"
+      - "setup.py"
+      - "poetry.lock"
+    config_files:
+      - "requirements.txt"
+      - "Pipfile"
+      - "pyproject.toml"
+      - "setup.cfg"
+      - "tox.ini"
+    markers:
+      - "__pycache__"
+      - ".venv"
+      - "venv"
+  
+  javascript:
+    name: "JavaScript"
+    file_patterns:
+      - "*.js"
+      - "*.jsx"
+      - "package.json"
+      - "yarn.lock"
+      - "package-lock.json"
+      - "pnpm-lock.yaml"
+    config_files:
+      - "package.json"
+      - ".npmrc"
+      - ".yarnrc"
+      - "webpack.config.js"
+    markers:
+      - "node_modules"
+  
+  typescript:
+    name: "TypeScript"
+    file_patterns:
+      - "*.ts"
+      - "*.tsx"
+      - "tsconfig.json"
+      - "tslint.json"
+    config_files:
+      - "tsconfig.json"
+      - "tsconfig.*.json"
+    markers:
+      - "@types"
+  
+  csharp:
+    name: "C#"
+    file_patterns:
+      - "*.cs"
+      - "*.csproj"
+      - "*.sln"
+      - "*.fsproj"
+      - "*.vbproj"
+    config_files:
+      - "*.csproj"
+      - "*.sln"
+      - "nuget.config"
+      - "global.json"
+    markers:
+      - "bin"
+      - "obj"
+  
+  go:
+    name: "Go"
+    file_patterns:
+      - "*.go"
+      - "go.mod"
+      - "go.sum"
+    config_files:
+      - "go.mod"
+      - "go.sum"
+    markers:
+      - "vendor"
+  
+  rust:
+    name: "Rust"
+    file_patterns:
+      - "*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+    config_files:
+      - "Cargo.toml"
+      - "Cargo.lock"
+    markers:
+      - "target"
+      - "src/main.rs"
+      - "src/lib.rs"
+  
+  ruby:
+    name: "Ruby"
+    file_patterns:
+      - "*.rb"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "*.gemspec"
+      - "Rakefile"
+    config_files:
+      - "Gemfile"
+      - ".ruby-version"
+      - ".rvmrc"
+    markers:
+      - "vendor/bundle"
+  
+  php:
+    name: "PHP"
+    file_patterns:
+      - "*.php"
+      - "composer.json"
+      - "composer.lock"
+      - "*.phar"
+    config_files:
+      - "composer.json"
+      - "php.ini"
+      - ".php-version"
+    markers:
+      - "vendor"
+  
+  swift:
+    name: "Swift"
+    file_patterns:
+      - "*.swift"
+      - "Package.swift"
+      - "*.xcodeproj"
+      - "*.xcworkspace"
+    config_files:
+      - "Package.swift"
+      - "Podfile"
+    markers:
+      - ".build"
+      - "Pods"
+  
+  kotlin:
+    name: "Kotlin"
+    file_patterns:
+      - "*.kt"
+      - "*.kts"
+      - "build.gradle.kts"
+    config_files:
+      - "build.gradle.kts"
+      - "settings.gradle.kts"
+    markers:
+      - "src/main/kotlin"
+  
+  # Systems Languages
+  c:
+    name: "C"
+    file_patterns:
+      - "*.c"
+      - "*.h"
+      - "Makefile"
+      - "CMakeLists.txt"
+    config_files:
+      - "Makefile"
+      - "CMakeLists.txt"
+      - "configure"
+    markers:
+      - "*.o"
+      - "*.a"
+      - "*.so"
+  
+  cpp:
+    name: "C++"
+    file_patterns:
+      - "*.cpp"
+      - "*.cc"
+      - "*.cxx"
+      - "*.hpp"
+      - "*.hh"
+      - "*.hxx"
+    config_files:
+      - "CMakeLists.txt"
+      - "Makefile"
+      - "conanfile.txt"
+    markers:
+      - "build"
+      - "cmake-build-*"
+  
+  zig:
+    name: "Zig"
+    file_patterns:
+      - "*.zig"
+      - "build.zig"
+    config_files:
+      - "build.zig"
+    markers:
+      - "zig-cache"
+      - "zig-out"
+  
+  nim:
+    name: "Nim"
+    file_patterns:
+      - "*.nim"
+      - "*.nimble"
+      - "nim.cfg"
+    config_files:
+      - "*.nimble"
+      - "nim.cfg"
+    markers:
+      - "nimcache"
+  
+  # Functional Languages
+  haskell:
+    name: "Haskell"
+    file_patterns:
+      - "*.hs"
+      - "*.lhs"
+      - "*.cabal"
+      - "stack.yaml"
+    config_files:
+      - "*.cabal"
+      - "stack.yaml"
+      - "package.yaml"
+    markers:
+      - ".stack-work"
+      - "dist-newstyle"
+  
+  scala:
+    name: "Scala"
+    file_patterns:
+      - "*.scala"
+      - "*.sbt"
+      - "build.sbt"
+    config_files:
+      - "build.sbt"
+      - "project/build.properties"
+    markers:
+      - "target"
+      - "project/target"
+  
+  clojure:
+    name: "Clojure"
+    file_patterns:
+      - "*.clj"
+      - "*.cljs"
+      - "*.cljc"
+      - "project.clj"
+      - "deps.edn"
+    config_files:
+      - "project.clj"
+      - "deps.edn"
+    markers:
+      - "target"
+      - ".cpcache"
+  
+  elixir:
+    name: "Elixir"
+    file_patterns:
+      - "*.ex"
+      - "*.exs"
+      - "mix.exs"
+      - "mix.lock"
+    config_files:
+      - "mix.exs"
+      - "config/config.exs"
+    markers:
+      - "_build"
+      - "deps"
+  
+  fsharp:
+    name: "F#"
+    file_patterns:
+      - "*.fs"
+      - "*.fsx"
+      - "*.fsi"
+      - "*.fsproj"
+    config_files:
+      - "*.fsproj"
+      - "paket.dependencies"
+    markers:
+      - "bin"
+      - "obj"
+  
+  ocaml:
+    name: "OCaml"
+    file_patterns:
+      - "*.ml"
+      - "*.mli"
+      - "dune"
+      - "dune-project"
+    config_files:
+      - "dune-project"
+      - "_tags"
+      - ".merlin"
+    markers:
+      - "_build"
+  
+  # Other Languages
+  dart:
+    name: "Dart"
+    file_patterns:
+      - "*.dart"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+    config_files:
+      - "pubspec.yaml"
+      - "analysis_options.yaml"
+    markers:
+      - ".dart_tool"
+      - ".packages"
+  
+  julia:
+    name: "Julia"
+    file_patterns:
+      - "*.jl"
+      - "Project.toml"
+      - "Manifest.toml"
+    config_files:
+      - "Project.toml"
+      - "Manifest.toml"
+    markers:
+      - ".julia"
+  
+  r:
+    name: "R"
+    file_patterns:
+      - "*.R"
+      - "*.Rmd"
+      - "*.Rproj"
+      - "DESCRIPTION"
+    config_files:
+      - "*.Rproj"
+      - "DESCRIPTION"
+      - "renv.lock"
+    markers:
+      - ".Rproj.user"
+      - "renv"
+  
+  matlab:
+    name: "MATLAB"
+    file_patterns:
+      - "*.m"
+      - "*.mat"
+      - "*.mlx"
+      - "*.mltbx"
+    config_files:
+      - "*.prj"
+    markers:
+      - "*.asv"
+  
+  perl:
+    name: "Perl"
+    file_patterns:
+      - "*.pl"
+      - "*.pm"
+      - "*.pod"
+      - "cpanfile"
+      - "Makefile.PL"
+    config_files:
+      - "cpanfile"
+      - "Makefile.PL"
+      - "Build.PL"
+    markers:
+      - "blib"
+      - "local"
+  
+  lua:
+    name: "Lua"
+    file_patterns:
+      - "*.lua"
+      - "rockspec"
+    config_files:
+      - "*.rockspec"
+      - ".luacheckrc"
+    markers:
+      - "lua_modules"
+
+web_frameworks:
+  # JavaScript/TypeScript Frameworks
+  express:
+    name: "Express.js"
+    dependencies:
+      - "express"
+    file_patterns:
+      - "app.js"
+      - "server.js"
+      - "index.js"
+    markers:
+      - "routes/"
+      - "middleware/"
+  
+  nestjs:
+    name: "NestJS"
+    dependencies:
+      - "@nestjs/core"
+      - "@nestjs/common"
+    file_patterns:
+      - "*.module.ts"
+      - "*.controller.ts"
+      - "*.service.ts"
+      - "nest-cli.json"
+    markers:
+      - "src/modules"
+      - "@Module"
+  
+  fastify:
+    name: "Fastify"
+    dependencies:
+      - "fastify"
+    file_patterns:
+      - "*.fastify.js"
+    markers:
+      - "plugins/"
+  
+  koa:
+    name: "Koa"
+    dependencies:
+      - "koa"
+    file_patterns:
+      - "app.js"
+    markers:
+      - "koa-router"
+  
+  nextjs:
+    name: "Next.js"
+    dependencies:
+      - "next"
+      - "react"
+      - "react-dom"
+    file_patterns:
+      - "next.config.js"
+      - "next.config.mjs"
+      - "next.config.ts"
+    markers:
+      - "pages/"
+      - "app/"
+      - ".next"
+  
+  nuxtjs:
+    name: "Nuxt.js"
+    dependencies:
+      - "nuxt"
+      - "@nuxt/core"
+    file_patterns:
+      - "nuxt.config.js"
+      - "nuxt.config.ts"
+    markers:
+      - ".nuxt"
+      - "pages/"
+      - "store/"
+  
+  gatsby:
+    name: "Gatsby"
+    dependencies:
+      - "gatsby"
+    file_patterns:
+      - "gatsby-config.js"
+      - "gatsby-node.js"
+      - "gatsby-browser.js"
+    markers:
+      - ".cache"
+      - "public"
+  
+  remix:
+    name: "Remix"
+    dependencies:
+      - "@remix-run/node"
+      - "@remix-run/react"
+    file_patterns:
+      - "remix.config.js"
+    markers:
+      - "app/routes"
+  
+  # Python Frameworks
+  django:
+    name: "Django"
+    dependencies:
+      - "django"
+    file_patterns:
+      - "manage.py"
+      - "wsgi.py"
+      - "asgi.py"
+      - "settings.py"
+    markers:
+      - "apps.py"
+      - "models.py"
+      - "views.py"
+      - "urls.py"
+  
+  flask:
+    name: "Flask"
+    dependencies:
+      - "flask"
+    file_patterns:
+      - "app.py"
+      - "application.py"
+      - "wsgi.py"
+    markers:
+      - "templates/"
+      - "static/"
+  
+  fastapi:
+    name: "FastAPI"
+    dependencies:
+      - "fastapi"
+      - "uvicorn"
+    file_patterns:
+      - "main.py"
+    markers:
+      - "routers/"
+      - "@app.get"
+      - "@app.post"
+  
+  pyramid:
+    name: "Pyramid"
+    dependencies:
+      - "pyramid"
+    file_patterns:
+      - "setup.py"
+      - "development.ini"
+      - "production.ini"
+    markers:
+      - "views/"
+  
+  tornado:
+    name: "Tornado"
+    dependencies:
+      - "tornado"
+    file_patterns:
+      - "*.tornado.py"
+    markers:
+      - "tornado.web"
+  
+  bottle:
+    name: "Bottle"
+    dependencies:
+      - "bottle"
+    file_patterns:
+      - "bottle_app.py"
+    markers:
+      - "@route"
+  
+  # Java Frameworks
+  spring_boot:
+    name: "Spring Boot"
+    dependencies:
+      - "spring-boot-starter"
+      - "org.springframework.boot"
+    file_patterns:
+      - "application.properties"
+      - "application.yml"
+      - "application.yaml"
+      - "*Application.java"
+    markers:
+      - "@SpringBootApplication"
+      - "@RestController"
+      - "@Service"
+      - "@Repository"
+  
+  micronaut:
+    name: "Micronaut"
+    dependencies:
+      - "io.micronaut"
+    file_patterns:
+      - "micronaut-cli.yml"
+      - "application.yml"
+    markers:
+      - "@Controller"
+      - "@Singleton"
+  
+  quarkus:
+    name: "Quarkus"
+    dependencies:
+      - "io.quarkus"
+    file_patterns:
+      - "application.properties"
+    markers:
+      - "@Path"
+      - "@QuarkusTest"
+  
+  vertx:
+    name: "Vert.x"
+    dependencies:
+      - "io.vertx"
+    file_patterns:
+      - "*Verticle.java"
+    markers:
+      - "Verticle"
+      - "Router"
+  
+  play:
+    name: "Play Framework"
+    dependencies:
+      - "com.typesafe.play"
+    file_patterns:
+      - "conf/routes"
+      - "conf/application.conf"
+    markers:
+      - "app/controllers"
+      - "app/views"
+  
+  # Ruby Frameworks
+  rails:
+    name: "Ruby on Rails"
+    dependencies:
+      - "rails"
+    file_patterns:
+      - "Rakefile"
+      - "config.ru"
+      - "config/application.rb"
+      - "config/routes.rb"
+    markers:
+      - "app/controllers"
+      - "app/models"
+      - "app/views"
+      - "db/migrate"
+  
+  sinatra:
+    name: "Sinatra"
+    dependencies:
+      - "sinatra"
+    file_patterns:
+      - "config.ru"
+      - "app.rb"
+    markers:
+      - "get '/"
+      - "post '/"
+  
+  hanami:
+    name: "Hanami"
+    dependencies:
+      - "hanami"
+    file_patterns:
+      - "config/environment.rb"
+    markers:
+      - "apps/"
+      - "lib/"
+  
+  # PHP Frameworks
+  laravel:
+    name: "Laravel"
+    dependencies:
+      - "laravel/framework"
+    file_patterns:
+      - "artisan"
+      - "bootstrap/app.php"
+    markers:
+      - "app/Http/Controllers"
+      - "routes/web.php"
+      - "resources/views"
+  
+  symfony:
+    name: "Symfony"
+    dependencies:
+      - "symfony/framework-bundle"
+    file_patterns:
+      - "symfony.lock"
+      - "config/bundles.php"
+    markers:
+      - "src/Controller"
+      - "config/routes"
+  
+  slim:
+    name: "Slim"
+    dependencies:
+      - "slim/slim"
+    file_patterns:
+      - "public/index.php"
+    markers:
+      - "$app->get"
+      - "$app->post"
+  
+  codeigniter:
+    name: "CodeIgniter"
+    file_patterns:
+      - "spark"
+      - "app/Config/App.php"
+    markers:
+      - "app/Controllers"
+      - "app/Models"
+  
+  # Go Frameworks
+  gin:
+    name: "Gin"
+    dependencies:
+      - "github.com/gin-gonic/gin"
+    markers:
+      - "gin.Default()"
+      - "gin.New()"
+  
+  echo:
+    name: "Echo"
+    dependencies:
+      - "github.com/labstack/echo"
+    markers:
+      - "echo.New()"
+  
+  fiber:
+    name: "Fiber"
+    dependencies:
+      - "github.com/gofiber/fiber"
+    markers:
+      - "fiber.New()"
+  
+  chi:
+    name: "Chi"
+    dependencies:
+      - "github.com/go-chi/chi"
+    markers:
+      - "chi.NewRouter()"
+  
+  # Rust Frameworks
+  actix:
+    name: "Actix Web"
+    dependencies:
+      - "actix-web"
+    markers:
+      - "HttpServer::new"
+      - "#[actix_web::main]"
+  
+  rocket:
+    name: "Rocket"
+    dependencies:
+      - "rocket"
+    markers:
+      - "#[launch]"
+      - "#[get("
+  
+  warp:
+    name: "Warp"
+    dependencies:
+      - "warp"
+    markers:
+      - "warp::serve"
+
+databases:
+  # Relational Databases
+  postgresql:
+    name: "PostgreSQL"
+    config_files:
+      - "postgresql.conf"
+      - "pg_hba.conf"
+    connection_patterns:
+      - "postgresql://"
+      - "postgres://"
+      - "jdbc:postgresql"
+    dependencies:
+      - "pg"
+      - "psycopg2"
+      - "asyncpg"
+      - "postgresql"
+      - "org.postgresql"
+    markers:
+      - "migrations/postgres"
+      - ".pgpass"
+  
+  mysql:
+    name: "MySQL"
+    config_files:
+      - "my.cnf"
+      - "my.ini"
+    connection_patterns:
+      - "mysql://"
+      - "jdbc:mysql"
+    dependencies:
+      - "mysql"
+      - "mysql2"
+      - "mysqlclient"
+      - "pymysql"
+      - "mysql-connector"
+    markers:
+      - "migrations/mysql"
+  
+  mariadb:
+    name: "MariaDB"
+    config_files:
+      - "my.cnf"
+    connection_patterns:
+      - "mariadb://"
+      - "jdbc:mariadb"
+    dependencies:
+      - "mariadb"
+      - "mariadb-connector"
+    markers:
+      - "migrations/mariadb"
+  
+  mssql:
+    name: "SQL Server"
+    connection_patterns:
+      - "sqlserver://"
+      - "jdbc:sqlserver"
+      - "mssql://"
+    dependencies:
+      - "mssql"
+      - "tedious"
+      - "pyodbc"
+      - "pymssql"
+    markers:
+      - "migrations/sqlserver"
+  
+  oracle:
+    name: "Oracle Database"
+    config_files:
+      - "tnsnames.ora"
+      - "sqlnet.ora"
+    connection_patterns:
+      - "oracle://"
+      - "jdbc:oracle"
+    dependencies:
+      - "oracledb"
+      - "cx_Oracle"
+    markers:
+      - "migrations/oracle"
+  
+  sqlite:
+    name: "SQLite"
+    file_patterns:
+      - "*.db"
+      - "*.sqlite"
+      - "*.sqlite3"
+      - "*.db3"
+    connection_patterns:
+      - "sqlite://"
+      - "jdbc:sqlite"
+    dependencies:
+      - "sqlite3"
+      - "better-sqlite3"
+      - "sqlite"
+    markers:
+      - "database.sqlite"
+  
+  # NoSQL Databases
+  mongodb:
+    name: "MongoDB"
+    config_files:
+      - "mongod.conf"
+    connection_patterns:
+      - "mongodb://"
+      - "mongodb+srv://"
+    dependencies:
+      - "mongodb"
+      - "mongoose"
+      - "pymongo"
+      - "motor"
+      - "mongo-driver"
+    markers:
+      - "models/schemas"
+  
+  cassandra:
+    name: "Cassandra"
+    config_files:
+      - "cassandra.yaml"
+    connection_patterns:
+      - "cassandra://"
+    dependencies:
+      - "cassandra-driver"
+      - "datastax-driver"
+    markers:
+      - "keyspaces/"
+  
+  dynamodb:
+    name: "DynamoDB"
+    dependencies:
+      - "aws-sdk"
+      - "@aws-sdk/client-dynamodb"
+      - "boto3"
+    markers:
+      - "dynamodb-local"
+      - "TableName"
+  
+  couchdb:
+    name: "CouchDB"
+    connection_patterns:
+      - "couchdb://"
+      - "http://.*:5984"
+    dependencies:
+      - "nano"
+      - "couchdb"
+      - "pouchdb"
+    markers:
+      - "_design/"
+  
+  ravendb:
+    name: "RavenDB"
+    dependencies:
+      - "ravendb"
+    markers:
+      - "DocumentStore"
+  
+  # Key-Value Stores
+  redis:
+    name: "Redis"
+    config_files:
+      - "redis.conf"
+    connection_patterns:
+      - "redis://"
+      - "rediss://"
+    dependencies:
+      - "redis"
+      - "ioredis"
+      - "jedis"
+      - "lettuce"
+      - "go-redis"
+    markers:
+      - "REDIS_URL"
+  
+  memcached:
+    name: "Memcached"
+    connection_patterns:
+      - "memcached://"
+    dependencies:
+      - "memcached"
+      - "pymemcache"
+      - "memcache"
+    markers:
+      - "MEMCACHED_SERVERS"
+  
+  etcd:
+    name: "etcd"
+    config_files:
+      - "etcd.conf"
+    dependencies:
+      - "etcd3"
+      - "python-etcd"
+      - "go.etcd.io/etcd"
+    markers:
+      - "ETCD_ENDPOINTS"
+  
+  consul:
+    name: "Consul"
+    config_files:
+      - "consul.json"
+      - "consul.hcl"
+    dependencies:
+      - "consul"
+      - "python-consul"
+    markers:
+      - "CONSUL_HTTP_ADDR"
+  
+  # Graph Databases
+  neo4j:
+    name: "Neo4j"
+    config_files:
+      - "neo4j.conf"
+    connection_patterns:
+      - "neo4j://"
+      - "bolt://"
+    dependencies:
+      - "neo4j"
+      - "neo4j-driver"
+      - "py2neo"
+    markers:
+      - "cypher/"
+  
+  arangodb:
+    name: "ArangoDB"
+    connection_patterns:
+      - "arangodb://"
+      - "http://.*:8529"
+    dependencies:
+      - "arangojs"
+      - "pyarango"
+    markers:
+      - "AQL"
+  
+  janusgraph:
+    name: "JanusGraph"
+    config_files:
+      - "janusgraph.properties"
+    dependencies:
+      - "janusgraph"
+    markers:
+      - "gremlin/"
+  
+  # Time-series Databases
+  influxdb:
+    name: "InfluxDB"
+    config_files:
+      - "influxdb.conf"
+    connection_patterns:
+      - "influx://"
+      - "http://.*:8086"
+    dependencies:
+      - "influxdb"
+      - "influxdb-client"
+    markers:
+      - "INFLUX_TOKEN"
+  
+  timescaledb:
+    name: "TimescaleDB"
+    dependencies:
+      - "timescaledb"
+    markers:
+      - "CREATE EXTENSION timescaledb"
+      - "create_hypertable"
+  
+  prometheus:
+    name: "Prometheus"
+    config_files:
+      - "prometheus.yml"
+      - "prometheus.yaml"
+    dependencies:
+      - "prom-client"
+      - "prometheus_client"
+    markers:
+      - "metrics/"
+      - "__name__"
+  
+  # Search Engines
+  elasticsearch:
+    name: "Elasticsearch"
+    config_files:
+      - "elasticsearch.yml"
+    connection_patterns:
+      - "elasticsearch://"
+      - "http://.*:9200"
+    dependencies:
+      - "elasticsearch"
+      - "@elastic/elasticsearch"
+      - "elasticsearch-py"
+    markers:
+      - "mappings/"
+      - "_search"
+  
+  solr:
+    name: "Solr"
+    config_files:
+      - "solr.xml"
+      - "solrconfig.xml"
+    connection_patterns:
+      - "solr://"
+      - "http://.*:8983/solr"
+    dependencies:
+      - "solr"
+      - "pysolr"
+    markers:
+      - "schema.xml"
+  
+  meilisearch:
+    name: "MeiliSearch"
+    connection_patterns:
+      - "http://.*:7700"
+    dependencies:
+      - "meilisearch"
+      - "meilisearch-js"
+    markers:
+      - "MEILI_MASTER_KEY"
+
+message_queues:
+  kafka:
+    name: "Apache Kafka"
+    config_files:
+      - "server.properties"
+      - "kafka.properties"
+    dependencies:
+      - "kafka"
+      - "kafkajs"
+      - "kafka-python"
+      - "confluent-kafka"
+    markers:
+      - "KAFKA_BROKERS"
+      - "bootstrap.servers"
+  
+  rabbitmq:
+    name: "RabbitMQ"
+    config_files:
+      - "rabbitmq.conf"
+      - "rabbitmq.config"
+    connection_patterns:
+      - "amqp://"
+      - "amqps://"
+    dependencies:
+      - "amqplib"
+      - "pika"
+      - "bunny"
+      - "amqp"
+    markers:
+      - "RABBITMQ_URL"
+      - "exchanges/"
+      - "queues/"
+  
+  nats:
+    name: "NATS"
+    config_files:
+      - "nats-server.conf"
+    connection_patterns:
+      - "nats://"
+    dependencies:
+      - "nats"
+      - "nats.js"
+      - "nats-py"
+    markers:
+      - "NATS_URL"
+  
+  pulsar:
+    name: "Apache Pulsar"
+    config_files:
+      - "broker.conf"
+      - "standalone.conf"
+    connection_patterns:
+      - "pulsar://"
+    dependencies:
+      - "pulsar-client"
+      - "pulsar"
+    markers:
+      - "PULSAR_SERVICE_URL"
+  
+  activemq:
+    name: "ActiveMQ"
+    config_files:
+      - "activemq.xml"
+    connection_patterns:
+      - "tcp://.*:61616"
+      - "stomp://"
+    dependencies:
+      - "activemq"
+      - "stompjs"
+    markers:
+      - "JMS"
+  
+  zeromq:
+    name: "ZeroMQ"
+    dependencies:
+      - "zeromq"
+      - "zmq"
+      - "pyzmq"
+    markers:
+      - "zmq.Context"
+      - "ZMQ_"
+  
+  redis_pubsub:
+    name: "Redis Pub/Sub"
+    dependencies:
+      - "redis"
+      - "ioredis"
+    markers:
+      - "PUBLISH"
+      - "SUBSCRIBE"
+      - "pub/sub"
+
+frontend_frameworks:
+  react:
+    name: "React"
+    dependencies:
+      - "react"
+      - "react-dom"
+    file_patterns:
+      - "*.jsx"
+      - "*.tsx"
+    markers:
+      - "import React"
+      - "from 'react'"
+      - "<React.Fragment>"
+      - "useState"
+      - "useEffect"
+  
+  angular:
+    name: "Angular"
+    dependencies:
+      - "@angular/core"
+      - "@angular/common"
+    file_patterns:
+      - "angular.json"
+      - "*.component.ts"
+      - "*.module.ts"
+      - "*.service.ts"
+    markers:
+      - "@Component"
+      - "@Injectable"
+      - "@NgModule"
+  
+  vue:
+    name: "Vue.js"
+    dependencies:
+      - "vue"
+      - "@vue/cli"
+    file_patterns:
+      - "*.vue"
+      - "vue.config.js"
+    markers:
+      - "<template>"
+      - "new Vue"
+      - "createApp"
+  
+  svelte:
+    name: "Svelte"
+    dependencies:
+      - "svelte"
+    file_patterns:
+      - "*.svelte"
+      - "svelte.config.js"
+    markers:
+      - "<script>"
+      - "$:"
+      - "export let"
+  
+  solid:
+    name: "SolidJS"
+    dependencies:
+      - "solid-js"
+    file_patterns:
+      - "*.jsx"
+      - "*.tsx"
+    markers:
+      - "createSignal"
+      - "createEffect"
+      - "from 'solid-js'"
+  
+  alpinejs:
+    name: "Alpine.js"
+    dependencies:
+      - "alpinejs"
+    markers:
+      - "x-data"
+      - "x-show"
+      - "x-for"
+      - "Alpine.data"
+  
+  ember:
+    name: "Ember.js"
+    dependencies:
+      - "ember-cli"
+      - "ember-source"
+    file_patterns:
+      - ".ember-cli"
+      - "ember-cli-build.js"
+    markers:
+      - "app/routes"
+      - "app/components"
+
+mobile_frameworks:
+  react_native:
+    name: "React Native"
+    dependencies:
+      - "react-native"
+    file_patterns:
+      - "metro.config.js"
+      - "App.js"
+      - "*.ios.js"
+      - "*.android.js"
+    markers:
+      - "ios/"
+      - "android/"
+      - "react-native.config.js"
+  
+  flutter:
+    name: "Flutter"
+    file_patterns:
+      - "pubspec.yaml"
+      - "*.dart"
+      - "flutter.yaml"
+    markers:
+      - "lib/main.dart"
+      - "android/"
+      - "ios/"
+      - ".flutter-plugins"
+  
+  ionic:
+    name: "Ionic"
+    dependencies:
+      - "@ionic/core"
+      - "@ionic/angular"
+      - "@ionic/react"
+    file_patterns:
+      - "ionic.config.json"
+    markers:
+      - "src/app"
+      - "ion-"
+  
+  nativescript:
+    name: "NativeScript"
+    dependencies:
+      - "@nativescript/core"
+    file_patterns:
+      - "nativescript.config.ts"
+      - "*.tns.ts"
+    markers:
+      - "App_Resources/"
+
+game_development:
+  unity:
+    name: "Unity"
+    file_patterns:
+      - "*.unity"
+      - "*.prefab"
+      - "*.asset"
+      - "ProjectSettings/*.asset"
+    markers:
+      - "Assets/"
+      - "Library/"
+      - "ProjectSettings/"
+      - "*.meta"
+  
+  godot:
+    name: "Godot"
+    file_patterns:
+      - "project.godot"
+      - "*.tscn"
+      - "*.tres"
+      - "*.gd"
+      - "*.gdscript"
+    markers:
+      - ".godot/"
+      - "export_presets.cfg"
+  
+  unreal:
+    name: "Unreal Engine"
+    file_patterns:
+      - "*.uproject"
+      - "*.uasset"
+      - "*.umap"
+    markers:
+      - "Content/"
+      - "Source/"
+      - "Config/"
+  
+  love2d:
+    name: "Love2D"
+    file_patterns:
+      - "main.lua"
+      - "conf.lua"
+    markers:
+      - "love.load"
+      - "love.draw"
+      - "love.update"
+
+machine_learning:
+  tensorflow:
+    name: "TensorFlow"
+    dependencies:
+      - "tensorflow"
+      - "tensorflow-gpu"
+      - "tf-nightly"
+    markers:
+      - "import tensorflow"
+      - "tf.keras"
+      - ".pb"
+      - ".h5"
+  
+  pytorch:
+    name: "PyTorch"
+    dependencies:
+      - "torch"
+      - "torchvision"
+      - "torchaudio"
+    markers:
+      - "import torch"
+      - "nn.Module"
+      - ".pth"
+      - ".pt"
+  
+  scikit_learn:
+    name: "scikit-learn"
+    dependencies:
+      - "scikit-learn"
+      - "sklearn"
+    markers:
+      - "from sklearn"
+      - "import sklearn"
+      - ".pkl"
+      - ".joblib"
+  
+  keras:
+    name: "Keras"
+    dependencies:
+      - "keras"
+    markers:
+      - "from keras"
+      - "import keras"
+      - "model.compile"
+      - "model.fit"
+
+devops_tools:
+  docker:
+    name: "Docker"
+    file_patterns:
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - "docker-compose.yaml"
+      - ".dockerignore"
+      - "docker-compose.*.yml"
+    markers:
+      - "FROM"
+      - "RUN"
+      - "EXPOSE"
+      - "CMD"
+  
+  kubernetes:
+    name: "Kubernetes"
+    file_patterns:
+      - "*.yaml"
+      - "*.yml"
+      - "kustomization.yaml"
+      - "Chart.yaml"
+    markers:
+      - "apiVersion:"
+      - "kind:"
+      - "metadata:"
+      - "spec:"
+      - "helm/"
+  
+  terraform:
+    name: "Terraform"
+    file_patterns:
+      - "*.tf"
+      - "*.tfvars"
+      - "terraform.tfstate"
+      - ".terraform.lock.hcl"
+    markers:
+      - "resource"
+      - "provider"
+      - "module"
+      - ".terraform/"
+  
+  ansible:
+    name: "Ansible"
+    file_patterns:
+      - "ansible.cfg"
+      - "playbook.yml"
+      - "inventory"
+      - "*.ansible.yml"
+    markers:
+      - "hosts:"
+      - "tasks:"
+      - "roles/"
+      - "group_vars/"
+      - "host_vars/"
+
+# Detection priority order (higher number = higher priority)
+detection_priority:
+  file_patterns: 3
+  config_files: 5
+  dependencies: 4
+  markers: 2
+  connection_patterns: 1

@@ -1,8 +1,8 @@
 # Development Environment Orchestrator
 
-> **Instantly create and manage containerized development environments with a simple REST API**
+> **Automatically analyze projects and provision development environments locally or in the cloud with intelligent technology detection**
 
-A Spring Boot application that orchestrates Docker containers to provide complete, isolated development stacks. Perfect for teams who want to standardize development environments and eliminate "works on my machine" problems.
+A comprehensive Spring Boot platform that analyzes your codebase, detects technologies, and orchestrates development environments across Docker and cloud providers (AWS, Azure, GCP). Features automatic stack detection, infrastructure provisioning, and real-time monitoring.
 
 ## Table of Contents
 
@@ -35,11 +35,12 @@ The Development Environment Orchestrator solves the common problem of complex de
 ## Features
 
 ### 🚀 Core Capabilities
-- **One-Click Environment Creation** - Deploy complete dev stacks in seconds
-- **Template System** - Pre-configured stacks for popular frameworks
-- **Real-Time Monitoring** - Live status updates and container logs
-- **Multi-User Support** - User isolation and resource quotas
-- **Automatic Cleanup** - Scheduled cleanup of idle environments
+- **Intelligent Project Analysis** - Automatically detect languages, frameworks, databases, and dependencies
+- **Multi-Infrastructure Support** - Deploy to Docker locally or provision in AWS, Azure, GCP via Terraform
+- **Auto-Generated Templates** - Create Docker Compose, Kubernetes, and Terraform configs from project analysis
+- **Real-Time Monitoring** - Live metrics, status updates, and resource usage tracking
+- **Cost Estimation** - Predict cloud infrastructure costs before deployment
+- **Project Registry** - Register and manage multiple projects with VCS integration
 
 ### 🛡️ Enterprise Ready
 - **JWT Authentication** - Secure API access with role-based permissions
@@ -48,10 +49,11 @@ The Development Environment Orchestrator solves the common problem of complex de
 - **Health Monitoring** - Built-in health checks and metrics
 
 ### 🔧 Developer Experience
-- **REST API** - Simple HTTP endpoints for all operations
-- **WebSocket Updates** - Real-time progress notifications
+- **REST API** - Comprehensive endpoints for environments, projects, and infrastructure
+- **WebSocket Updates** - Real-time metrics, logs, and status notifications
 - **Swagger Documentation** - Interactive API explorer
-- **Docker Integration** - Secure Docker API usage (no shell injection)
+- **Technology Detection** - Support for 30+ languages and 40+ frameworks
+- **Template Generation** - Auto-create deployment configs from analysis
 
 ## Tech Stack
 
@@ -62,7 +64,9 @@ The Development Environment Orchestrator solves the common problem of complex de
 | **Caching** | Redis 7.2 for session management |
 | **Security** | JWT authentication, OAuth2 resource server |
 | **Containers** | Docker Java API with async orchestration |
-| **Real-time** | WebSocket connections |
+| **Cloud** | Terraform integration for AWS, Azure, GCP |
+| **Analysis** | Pattern-based technology detection engine |
+| **Real-time** | WebSocket for metrics and status updates |
 | **Quality** | 80% test coverage, Testcontainers, SpotBugs |
 
 ## Quick Start
@@ -115,10 +119,15 @@ curl -X POST http://localhost:8080/api/v1/environments \
 |--------|----------|-------------|
 | `GET` | `/api/v1/environments` | List user environments |
 | `POST` | `/api/v1/environments` | Create new environment (async) |
+| `POST` | `/api/v1/environments/infrastructure` | Create cloud infrastructure environment |
 | `GET` | `/api/v1/environments/{id}` | Get environment details |
+| `GET` | `/api/v1/environments/{id}/details` | Get detailed infrastructure info |
 | `POST` | `/api/v1/environments/{id}/start` | Start stopped environment |
 | `POST` | `/api/v1/environments/{id}/stop` | Stop running environment |
 | `DELETE` | `/api/v1/environments/{id}` | Destroy environment |
+| `GET` | `/api/v1/environments/{id}/resources` | List cloud resources |
+| `GET` | `/api/v1/environments/{id}/terraform/plan` | Get Terraform plan |
+| `GET` | `/api/v1/environments/{id}/terraform/outputs` | Get Terraform outputs |
 
 ### Template Management
 
@@ -127,12 +136,26 @@ curl -X POST http://localhost:8080/api/v1/environments \
 | `GET` | `/api/v1/templates` | List available templates |
 | `GET` | `/api/v1/templates/{id}` | Get template details |
 
+### Project Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/projects/register` | Register a new project |
+| `POST` | `/api/v1/projects/{id}/analyze` | Analyze project technologies |
+| `GET` | `/api/v1/projects/{id}` | Get project details |
+| `POST` | `/api/v1/projects/{id}/start` | Start project environment |
+| `POST` | `/api/v1/projects/{id}/stop` | Stop project environment |
+| `GET` | `/api/v1/projects/{id}/metrics` | Get project metrics |
+| `POST` | `/api/v1/projects/{id}/generate-template` | Generate deployment templates |
+| `GET` | `/api/v1/projects/{id}/cost-estimate` | Estimate cloud costs |
+
 ### Real-Time Updates
 
 | WebSocket | Purpose |
 |-----------|---------|
 | `/ws/environment/{id}/status` | Environment status changes |
 | `/ws/environment/{id}/logs` | Container log streaming |
+| `/ws/metrics` | Real-time resource metrics |
 
 ### Example Usage
 
@@ -200,15 +223,22 @@ services:
 
 ```
 src/main/java/com/devorchestrator/
-├── controller/          # REST API endpoints
-├── service/            # Business logic (async orchestration)
-├── repository/         # Data access layer
-├── entity/            # JPA entities
-├── dto/               # API request/response models
-├── config/            # Spring configuration
-├── security/          # JWT authentication
-├── websocket/         # Real-time communication
-└── exception/         # Error handling
+├── analyzer/           # Project analysis and technology detection
+│   ├── detector/      # Language, framework, database detectors
+│   └── model/         # Detection models and patterns
+├── controller/         # REST API endpoints
+├── service/           # Business logic (async orchestration)
+├── repository/        # Data access layer
+├── entity/           # JPA entities
+├── dto/              # API request/response models
+├── infrastructure/    # Cloud infrastructure management
+│   ├── provider/     # Cloud provider implementations
+│   ├── terraform/    # Terraform integration
+│   └── state/        # Infrastructure state management
+├── config/           # Spring configuration
+├── security/         # JWT authentication
+├── websocket/        # Real-time communication
+└── exception/        # Error handling
 ```
 
 ### Running Tests
@@ -292,9 +322,21 @@ The application follows a **non-blocking, async architecture** to handle long-ru
 ```sql
 -- Core entities
 users (id, username, email, role)
-environment_templates (id, name, docker_compose_content)
-environments (id, name, status, owner_id, template_id, created_at)
+environment_templates (id, name, docker_compose_content, terraform_template)
+environments (id, name, status, owner_id, template_id, project_id, infrastructure_provider)
 container_instances (id, environment_id, docker_container_id, status, host_port)
+
+-- Project management
+project_registrations (id, name, repository_url, detected_technologies)
+project_analyses (id, project_id, analysis_results, recommendations)
+
+-- Cloud infrastructure
+terraform_states (id, environment_id, state_data)
+environment_cloud_resources (id, environment_id, resource_type, cloud_resource_id)
+
+-- Monitoring
+resource_metrics (id, environment_id, cpu_usage, memory_usage, timestamp)
+usage_reports (id, user_id, total_cpu_hours, total_memory_gb_hours, cost_estimate)
 ```
 
 ## Contributing
